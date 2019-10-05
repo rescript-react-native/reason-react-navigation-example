@@ -5,7 +5,7 @@
     "react-jsx": 3
   },
   "package-specs": {
-    "module": "es6",
+    "module": "commonjs",
     "in-source": true
   },
   "suffix": ".bs.js",
@@ -15,6 +15,10 @@
       "subdirs": true
     }
   ],
+  "warnings": {
+    "number": "@a-9-40-42"
+  },
+  "bsc-flags": ["-bs-no-version-header"],
   "bs-dependencies": [
     "reason-react",
     "reason-react-native",
