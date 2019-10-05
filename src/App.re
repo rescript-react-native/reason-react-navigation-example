@@ -1,169 +1,127 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Converted from https://github.com/facebook/react-native/blob/724fe11472cb874ce89657b2c3e7842feff04205/template/App.js
- * With a few tweaks
- */
 open ReactNative;
+open ReactNavigation;
+open Helpers;
 
-type reactNativeNewAppScreenColors = {
-  .
-  "primary": string,
-  "white": string,
-  "lighter": string,
-  "light": string,
-  "black": string,
-  "dark": string,
+module Content = {
+  open DrawerNavigator;
+
+  module NavRow = {
+    [@react.component]
+    let make = (~navigation, ~route, ~title) =>
+      <TouchableOpacity
+        onPress={_ => {
+          navigation->Navigation.closeDrawer;
+          navigation->Navigation.navigate(route);
+        }}
+        style=Style.(style(~padding=14.->dp, ()))>
+        <Text style=Style.(style(~color="#444", ()))>
+          {title |> React.string}
+        </Text>
+      </TouchableOpacity>;
+  };
+
+  let contentComponent = props => {
+    let navigation = props##navigation;
+    <SafeAreaView style={Style.style(~flex=1., ())}>
+      <View
+        style=Style.(
+          style(~borderBottomWidth=1., ~borderBottomColor="#eee", ())
+        )>
+        <Image
+          style=Style.(
+            style(
+              ~backgroundColor="grey",
+              ~width=36.->dp,
+              ~borderRadius=18.,
+              ~margin=11.->dp,
+              ~height=36.->dp,
+              (),
+            )
+          )
+          source=Icons.avatar
+        />
+      </View>
+      <View
+        style=Style.(
+          style(~borderBottomWidth=1., ~borderBottomColor="#eee", ())
+        )>
+        <NavRow route="Profile" title="Profile" navigation />
+        <NavRow route="Lists" title="Lists" navigation />
+        <NavRow route="Bookmarks" title="Bookmarks" navigation />
+        <NavRow route="Moments" title="Moments" navigation />
+      </View>
+      <View
+        style=Style.(
+          style(~borderBottomWidth=1., ~borderBottomColor="#eee", ())
+        )>
+        <NavRow route="Settings" title="Settings and privacy" navigation />
+        <NavRow route="Help" title="Help Centre" navigation />
+      </View>
+    </SafeAreaView>;
+  };
+
+  let navigator =
+    DrawerNavigator.makeWithConfig(
+      {
+        "Root":
+          TabNavigator.Bottom.makeWithConfig(
+            {
+              "Timeline": Timeline.navigator,
+              "Search": Search.navigator,
+              "Notifications": Notifications.navigator,
+              "Messages": Messages.navigator,
+            },
+            TabNavigator.config(~initialRouteName="Timeline", ()),
+          ),
+      },
+      config(~contentComponent, ()),
+    );
+
+  navigator->NavigationOptions.setDynamicNavigationOptions(params => {
+    let routeName =
+      params##navigation->Navigation.state->getActiveRoute##routeName;
+
+    let swipeEnabled = routeName == "TimelineList";
+
+    NavigationOptions.t(~tabBarVisible=false, ~swipeEnabled, ());
+  });
 };
 
-[@bs.module "react-native/Libraries/NewAppScreen"]
-external colors: reactNativeNewAppScreenColors = "Colors";
+module ContentView = {
+  let navigator =
+    TabNavigator.MaterialTop.make({
+      "Content": Content.navigator,
+      "Camera": Camera.navigator,
+    });
 
-[@bs.module "react-native/Libraries/Core/Devtools/openURLInBrowser"]
-external openURLInBrowser: string => unit = "default";
-
-module Header = {
-  [@react.component] [@bs.module "react-native/Libraries/NewAppScreen"]
-  external make: _ => React.element = "Header";
-};
-module ReloadInstructions = {
-  [@react.component] [@bs.module "react-native/Libraries/NewAppScreen"]
-  external make: _ => React.element = "ReloadInstructions";
-};
-module LearnMoreLinks = {
-  [@react.component] [@bs.module "react-native/Libraries/NewAppScreen"]
-  external make: _ => React.element = "LearnMoreLinks";
-};
-module DebugInstructions = {
-  [@react.component] [@bs.module "react-native/Libraries/NewAppScreen"]
-  external make: _ => React.element = "DebugInstructions";
-};
-
-/*
- Here is StyleSheet that is using Style module to define styles for your components
- The main different with JavaScript components you may encounter in React Native
- is the fact that they **must** be defined before being referenced
- (so before actual component definitions)
- More at https://reasonml-community.github.io/reason-react-native/en/docs/apis/Style/
- */
-let styles =
-  Style.(
-    StyleSheet.create({
-      "scrollView": style(~backgroundColor=colors##lighter, ()),
-      "engine": style(~position=`absolute, ~right=0.->dp, ()),
-      "body": style(~backgroundColor=colors##white, ()),
-      "sectionContainer":
-        style(~marginTop=32.->dp, ~paddingHorizontal=24.->dp, ()),
-      "sectionTitle":
-        style(~fontSize=24., ~fontWeight=`_600, ~color=colors##black, ()),
-      "sectionDescription":
-        style(
-          ~marginTop=8.->dp,
-          ~fontSize=18.,
-          ~fontWeight=`_400,
-          ~color=colors##dark,
-          (),
-        ),
-      "highlight": style(~fontWeight=`_700, ()),
-      "footer":
-        style(
-          ~color=colors##dark,
-          ~fontSize=12.,
-          ~fontWeight=`_600,
-          ~padding=4.->dp,
-          ~paddingRight=12.->dp,
-          ~textAlign=`right,
-          (),
-        ),
-    })
+  NavigationOptions.(
+    navigator->setNavigationOptions(
+      t(~header=Header.element(React.null), ()),
+    )
   );
+};
+
+module TwitterAppContainer =
+  AppContainer.Make({
+    type screenProps = {. "someProp": int};
+
+    let navigator =
+      SwitchNavigator.make({
+        "App":
+          StackNavigator.make({
+            "View": ContentView.navigator,
+            "Compose": Compose.make,
+            "Tweet": Tweet.make,
+            "Profile": Profile.make,
+          }),
+        "AppLoading": LoadingScreen.make,
+        /*"Auth": LoginRoute.reactClass,*/
+      });
+  });
 
 [@react.component]
-let app = () =>
-  <>
-    <StatusBar barStyle=`darkContent />
-    <SafeAreaView>
-      <ScrollView
-        contentInsetAdjustmentBehavior=`automatic style={styles##scrollView}>
-        <Header />
-        //  {global.HermesInternal == null ? null : (
-        //    <View style={styles##engine}>
-        //      <Text style={styles##footer}>Engine: Hermes</Text>
-        //    </View>
-        //  )}
-        <View style={styles##body}>
-          <View style={styles##sectionContainer}>
-            <Text style={styles##sectionTitle}>
-              "Step One"->React.string
-            </Text>
-            <Text style={styles##sectionDescription}>
-              "Edit "->React.string
-              <Text style={styles##highlight}>
-                "src/App.re"->React.string
-              </Text>
-              " to change this screen and then come back to see your edits."
-              ->React.string
-            </Text>
-          </View>
-          <View style={styles##sectionContainer}>
-            <Text style={styles##sectionTitle}>
-              "See Your Changes"->React.string
-            </Text>
-            <Text style={styles##sectionDescription}>
-              <ReloadInstructions />
-            </Text>
-          </View>
-          <View style={styles##sectionContainer}>
-            <Text style={styles##sectionTitle}> "Debug"->React.string </Text>
-            <Text style={styles##sectionDescription}>
-              <DebugInstructions />
-            </Text>
-          </View>
-          <View style={styles##sectionContainer}>
-            <Text style={styles##sectionTitle}>
-              "Learn More"->React.string
-            </Text>
-            <Text style={styles##sectionDescription}>
-              "Read the docs to discover what to do next:"->React.string
-            </Text>
-          </View>
-          <View style={styles##sectionContainer}>
-            <Text style={styles##sectionDescription}>
-              <Text style={styles##highlight}>
-                "Reason React Native"->React.string
-              </Text>
-            </Text>
-            <TouchableOpacity
-              onPress={_ =>
-                openURLInBrowser(
-                  "https://reasonml-community.github.io/reason-react-native/en/docs/",
-                )
-              }>
-              <Text
-                style=Style.(
-                  style(
-                    ~marginTop=8.->dp,
-                    ~fontSize=18.,
-                    ~fontWeight=`_400,
-                    ~color=colors##primary,
-                    (),
-                  )
-                )>
-                "https://reasonml-community.github.io/\nreason-react-native/"
-                ->React.string
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles##sectionContainer}>
-            <Text style={styles##sectionDescription}>
-              <Text style={styles##highlight}>
-                "React Native"->React.string
-              </Text>
-            </Text>
-          </View>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  </>;
+let app = () => {
+  let screenProps = {"someProp": 42};
+
+  <TwitterAppContainer screenProps />;
+};
