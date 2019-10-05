@@ -24,7 +24,9 @@ jobs:
           yarn install \
             --non-interactive \
             --frozen-lockfile
-      - name: Test
-        run: yarn test
-        env:
-          CI: true
+      - name: Build
+        run: yarn re:build
+      # - name: Test
+      #   run: yarn test
+      #   env:
+      #     CI: true
