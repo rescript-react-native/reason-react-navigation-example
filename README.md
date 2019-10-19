@@ -1,6 +1,6 @@
-# `@reason-react-native/navigation-example`
+# `@reason-react-native/reason-react-navigation-example`
 
-[![Build Status](https://github.com/reason-react-native/navigation-example/workflows/Build/badge.svg)](https://github.com/reason-react-native/navigation-example/actions)
+[![Build Status](https://github.com/reason-react-native/reason-react-navigation-example/workflows/Build/badge.svg)](https://github.com/reason-react-native/reason-react-navigation-example/actions)
 [![Chat](https://img.shields.io/discord/235176658175262720.svg?logo=discord&colorb=blue)](https://reasonml-community.github.io/reason-react-native/discord/)
 
 Example project for the

@@ -1,4 +1,4 @@
-# Changelog of `@reason-react-native/navigation-example`
+# Changelog of `@reason-react-native/reason-react-navigation-example`
 
 ## 0.1.0 - 20191005
 

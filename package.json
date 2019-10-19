@@ -1,8 +1,8 @@
 {
-  "name": "@reason-react-native/navigation-example",
+  "name": "@reason-react-native/reason-react-navigation-example",
   "version": "0.1.0",
   "private": true,
-  "repository": "https://github.com/reason-react-native/navigation-example.git",
+  "repository": "https://github.com/reason-react-native/reason-react-navigation-example.git",
   "license": "MIT",
   "keywords": [
     "reason",

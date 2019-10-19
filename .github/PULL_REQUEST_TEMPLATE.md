@@ -2,7 +2,7 @@
 
 **Before submitting a pull request,** please make you followed our CONTRIBUTING guide
 
-https://github.com/reason-react-native/navigation-example/blob/master/CONTRIBUTING.md
+https://github.com/reason-react-native/reason-react-navigation-example/blob/master/CONTRIBUTING.md
 
 -->
 
