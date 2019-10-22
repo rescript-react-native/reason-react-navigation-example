@@ -1,0 +1,27 @@
+{
+  "name": "NavigationExample",
+  "refmt": 3,
+  "reason": {
+    "react-jsx": 3
+  },
+  "package-specs": {
+    "module": "commonjs",
+    "in-source": true
+  },
+  "suffix": ".bs.js",
+  "sources": [
+    {
+      "dir": "src",
+      "subdirs": true
+    }
+  ],
+  "warnings": {
+    "number": "@a-9-40-42"
+  },
+  "bsc-flags": ["-bs-no-version-header"],
+  "bs-dependencies": [
+    "reason-react",
+    "reason-react-native",
+    "@reason-react-native/navigation"
+  ]
+}
